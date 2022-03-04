@@ -1,5 +1,6 @@
 import React from "react";
 import { UserListModel } from "../Models/UserListModel";
+import { UserService } from "../Services/UserService";
 
 interface Props{ }
 interface State{
@@ -11,29 +12,7 @@ class UserList extends React.Component<Props,State>{
     constructor(props:Props){
         super(props)
         this.state = {
-            user :[
-                    {
-                        'serial_number' : '001',
-                        'name'          : 'tri',
-                        'age'           : 25,
-                        'designation'   : 'Software Engineer',
-                        'company'       : 'Diskominfotik'
-                    },
-                    {
-                        'serial_number' : '002',
-                        'name'          : 'Angga',
-                        'age'           : 24,
-                        'designation'   : 'Database Designer',
-                        'company'       : 'Diskominfotik'
-                    },
-                    {
-                        'serial_number' : '003',
-                        'name'          : 'Utama',
-                        'age'           : 22,
-                        'designation'   : 'DevOps',
-                        'company'       : 'Diskominfotik'
-                    },
-            ]
+            user :UserService.getAllUsers()
         }
     }
     render() {

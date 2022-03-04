@@ -1,54 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UserListModel } from "../Models/UserListModel";
 import { UserService } from "../Services/UserService";
 
 interface Props{ }
 interface State{
-    user    : UserListModel[]
+    loading          : boolean;
+    users            : UserListModel[];
+    errorMessage    : string;
 }
 
-class UserList extends React.Component<Props,State>{
-    
-    constructor(props:Props){
-        super(props)
-        this.state = {
-            user :UserService.getAllUsers()
-        }
-    }
-    render() {
-        return(
-            <React.Fragment>
-                <div className="container">
-                    <div className="row">
-                        <div className="col">
-                            <h1>User List Example</h1>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col">
-                            <table className=" table table-striped table-hover text-center shadow-lg">
+let UserList:React.FC<Props> = () => {
+
+   let [state,setState] = useState<State>({
+       loading          : false,
+       users            : [] as UserListModel[],
+       errorMessage     : '' 
+   })
+
+   useEffect(()=>{
+    setState({
+        ...state,
+        loading :true
+    })
+
+       UserService.getAllUsers().then((response)=>{
+        setState({
+            ...state,
+            loading     : false,
+            users       : response.data
+        })
+
+       }).catch((error)=>{
+        setState({
+            ...state,
+            loading         : false,
+            errorMessage    : error.message
+        })
+       })
+   },[])
+
+    return( 
+        <React.Fragment>
+            <div className="container">
+                <div className="row">
+                    <div className="col">
+                        <h1>Get data from server with axios</h1>
+                        <div className="table-responsive">
+                            <table className="table table-striped table-bordered table-hover shadow-lg text-center">
                                 <thead className="bg-dark text-white">
                                     <tr>
-                                        <td>Serial Number</td>
-                                        <td>name</td>
-                                        <td>Age</td>
-                                        <td>Designation</td>
-                                        <td>Company</td>
-                                        <td>Action</td>
+                                        <th>serial number</th>
+                                        <th>name</th>
+                                        <th>email</th>
+                                        <th>address</th>
+                                        <th>phone</th>
+                                        <th>website</th>
+                                        <th>company</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        this.state.user.length > 0 &&
-                                        this.state.user.map(user => {
+                                        state.users.length > 0 && state.users.map(user => {
                                             return (
-                                                <tr key={user.serial_number}>
-                                                    <td>{user.serial_number}</td>
+                                                <tr key={user.id}>
+                                                    <td>{user.id}</td>
                                                     <td>{user.name}</td>
-                                                    <td>{user.age}</td>
-                                                    <td>{user.designation}</td>
-                                                    <td>{user.company}</td>
-                                                    <td>-</td>
+                                                    <td>{user.email}</td>
+                                                    <td>{user.address.street}, {user.address.city}</td>
+                                                    <td>{user.phone}</td>
+                                                    <td>{user.website}</td>
+                                                    <td>{user.company.name}</td>
                                                 </tr>
                                             )
                                         })
@@ -58,9 +79,10 @@ class UserList extends React.Component<Props,State>{
                         </div>
                     </div>
                 </div>
-            </React.Fragment>
-        )
-    }
+            </div>
+        </React.Fragment>
+    )
 }
+
 
 export default UserList

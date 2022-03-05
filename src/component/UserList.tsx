@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UserListModel } from "../Models/UserListModel";
 import { UserService } from "../Services/UserService";
+import {Link} from 'react-router-dom'
 
 interface Props{ }
 interface State{
@@ -41,13 +42,14 @@ let UserList:React.FC<Props> = () => {
 
     return( 
         <React.Fragment>
-            <div className="container">
+            <div className="container mt-3">
                 <div className="row">
                     <div className="col">
-                        <h1>Get data from server with axios</h1>
+                        <h1 className="text-success fw-bold">User List</h1>
+                        <p className="fst-italic">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Id enim libero ex, amet ab quasi vitae commodi sunt exercitationem voluptatum odit nulla porro molestiae maiores cum labore dignissimos accusamus voluptate?</p>
                         <div className="table-responsive">
                             <table className="table table-striped table-bordered table-hover shadow-lg text-center">
-                                <thead className="bg-dark text-white">
+                                <thead className="bg-success text-white">
                                     <tr>
                                         <th>serial number</th>
                                         <th>name</th>
@@ -64,7 +66,9 @@ let UserList:React.FC<Props> = () => {
                                             return (
                                                 <tr key={user.id}>
                                                     <td>{user.id}</td>
-                                                    <td>{user.name}</td>
+                                                    <td>
+                                                        <Link className="text-decoration-none text-success" to={`/contacts/${user.id}`}>{user.name}</Link>
+                                                    </td>
                                                     <td>{user.email}</td>
                                                     <td>{user.address.street}, {user.address.city}</td>
                                                     <td>{user.phone}</td>
